@@ -4,187 +4,336 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GreenChemistry - Espace Innovation</title>
-    
-    <!-- SDK Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
         :root {
             --primary-color: #2e7d32;
-            --accent-color: #1b5e20;
-            --secondary-color: #c8e6c9;
-            --bg-gradient: linear-gradient(135deg, #f1f8e9, #dcedc8);
+            --primary-dark: #1b5e20;
+            --secondary-color: #e8f5e9;
+            --accent-color: #66bb6a;
+            --text-color: #263238;
+            --muted-text: #5f6b73;
             --white: #ffffff;
+            --shadow: 0 18px 45px rgba(0, 0, 0, 0.08);
+            --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.06);
+            --radius-lg: 24px;
+            --radius-md: 18px;
+            --radius-sm: 12px;
+            --bg-gradient: linear-gradient(135deg, #f4fbf4 0%, #e8f5e9 45%, #dcedc8 100%);
+        }
+
+        * {
+            box-sizing: border-box;
         }
 
         body {
             margin: 0;
-            padding: 0;
+            min-height: 100vh;
             font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background: var(--bg-gradient);
-            color: #333;
+            color: var(--text-color);
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 100vh;
+            justify-content: center;
+            padding: 24px;
         }
 
-        /* --- LOGIN CARD --- */
+        img.logo {
+            max-width: 170px;
+            display: block;
+            margin: 0 auto 14px;
+        }
+
         #login-section {
-            margin-top: 10vh;
-            background: var(--white);
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            width: 90%;
-            max-width: 380px;
+            width: 100%;
+            max-width: 420px;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(46, 125, 50, 0.08);
+            border-radius: var(--radius-lg);
+            padding: 42px 34px;
+            box-shadow: var(--shadow);
             text-align: center;
         }
 
-        input { 
-            width: 100%; padding: 14px; margin: 10px 0; 
-            border: 2px solid var(--secondary-color); 
-            border-radius: 10px; box-sizing: border-box;
-            font-size: 1rem;
+        #login-section h2 {
+            margin: 0 0 10px;
+            font-size: 1.9rem;
+            color: var(--primary-dark);
         }
 
-        button { 
-            width: 100%; padding: 14px; 
-            background: var(--primary-color); color: white; 
-            border: none; border-radius: 10px; 
-            font-weight: bold; cursor: pointer; 
-            transition: background 0.3s;
-            font-size: 1rem;
+        #login-section p {
+            margin: 0 0 24px;
+            color: var(--muted-text);
+            font-size: 0.98rem;
         }
-        button:hover { background: var(--accent-color); }
 
-        /* --- CONTENU PROTEGE --- */
+        input {
+            width: 100%;
+            padding: 14px 16px;
+            margin: 10px 0;
+            border: 1.8px solid #cfe6d1;
+            border-radius: 14px;
+            font-size: 1rem;
+            outline: none;
+            transition: 0.25s ease;
+            background: #fcfffc;
+        }
+
+        input:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 4px rgba(102, 187, 106, 0.15);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px 18px;
+            border: none;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.25s ease, opacity 0.25s ease;
+            box-shadow: 0 10px 22px rgba(46, 125, 50, 0.22);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 28px rgba(46, 125, 50, 0.28);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .error-msg {
+            color: #c62828;
+            font-size: 0.9rem;
+            margin-top: 14px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            background: rgba(198, 40, 40, 0.08);
+            display: none;
+        }
+
         #protected-content {
             display: none;
-            width: 95%;
-            max-width: 1000px;
-            padding: 40px 0;
+            width: 100%;
+            max-width: 1120px;
+            padding: 28px 0 40px;
+        }
+
+        .hero-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            border: 1px solid rgba(46, 125, 50, 0.08);
+        }
+
+        .header-content {
             text-align: center;
+            padding: 42px 28px 20px;
         }
 
-        .header-content { margin-bottom: 40px; }
-        img.logo { max-width: 180px; margin-bottom: 10px; }
-
-        /* VIDEO */
-        .video-container {
-            position: relative; width: 100%; padding-bottom: 56.25%;
-            height: 0; margin: 30px 0; border-radius: 20px;
-            overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-            background: #000;
+        .header-content h1 {
+            margin: 0 0 12px;
+            font-size: clamp(2rem, 4vw, 3rem);
+            color: var(--primary-dark);
+            letter-spacing: -0.03em;
         }
-        .tech-grid {
-            width: fit-content;   /* ou une largeur fixe */
+
+        .header-content p {
             margin: 0 auto;
-        }
-        .video-container iframe {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;
+            max-width: 700px;
+            font-size: 1.08rem;
+            color: var(--muted-text);
+            line-height: 1.7;
         }
 
-        /* GRILLE TECHNIQUE */
+        .video-wrapper {
+            padding: 0 28px 10px;
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            height: 0;
+            border-radius: 24px;
+            overflow: hidden;
+            background: #000;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .video-container iframe {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
         .tech-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin-top: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 22px;
+            padding: 28px;
+            align-items: stretch;
         }
 
         .tech-card {
-            background: var(--white);
-            padding: 25px;
-            border-radius: 15px;
+            background: linear-gradient(180deg, #ffffff 0%, #f8fff8 100%);
+            padding: 24px;
+            border-radius: 20px;
             text-align: left;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            box-shadow: var(--shadow-soft);
+            border: 1px solid rgba(46, 125, 50, 0.08);
             border-top: 5px solid var(--primary-color);
+            transition: transform 0.2s ease, box-shadow 0.25s ease;
         }
 
-        .tech-card h3 { color: var(--primary-color); margin-top: 0; display: flex; align-items: center; gap: 10px; }
-        .tech-card p { font-size: 0.95rem; line-height: 1.5; color: #555; }
+        .tech-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 14px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .tech-card h3 {
+            margin: 0 0 12px;
+            color: var(--primary-dark);
+            font-size: 1.08rem;
+            line-height: 1.4;
+        }
+
+        .tech-card p {
+            margin: 0;
+            font-size: 0.97rem;
+            line-height: 1.7;
+            color: var(--muted-text);
+        }
 
         .highlight-box {
-            background: var(--primary-color);
+            margin: 0 28px 28px;
+            padding: 28px 30px;
+            border-radius: 22px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
             color: white;
-            padding: 30px;
-            border-radius: 15px;
-            margin-top: 40px;
-            font-size: 1.2rem;
+            font-size: 1.12rem;
+            line-height: 1.7;
+            text-align: center;
             font-style: italic;
+            box-shadow: 0 14px 34px rgba(46, 125, 50, 0.25);
         }
 
-        .logout-btn { 
-            background: transparent; color: #666; 
-            text-decoration: underline; border: none; 
-            cursor: pointer; margin-top: 40px; padding: 20px;
+        .logout-btn {
+            width: auto;
+            display: block;
+            margin: 0 auto 30px;
+            padding: 12px 20px;
+            background: transparent;
+            color: var(--primary-dark);
+            text-decoration: underline;
+            font-weight: 600;
+            box-shadow: none;
         }
 
-        .error-msg { color: #d32f2f; font-size: 0.85rem; margin-top: 10px; display: none; }
+        .logout-btn:hover {
+            transform: none;
+            box-shadow: none;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 16px;
+            }
+
+            #login-section {
+                padding: 30px 22px;
+            }
+
+            .header-content,
+            .tech-grid,
+            .video-wrapper {
+                padding-left: 18px;
+                padding-right: 18px;
+            }
+
+            .highlight-box {
+                margin-left: 18px;
+                margin-right: 18px;
+                padding: 22px 20px;
+            }
+        }
     </style>
 </head>
 <body>
-
-    <!-- FORMULAIRE DE CONNEXION -->
     <div id="login-section">
         <img src="logo.png" alt="Logo" class="logo" onerror="this.src='https://via.placeholder.com/140x80?text=GreenChemistry'">
         <h2>Espace Partenaires</h2>
+        <p>Connectez-vous pour accéder à l’espace innovation sécurisé.</p>
         <input type="email" id="email" placeholder="Email">
         <input type="password" id="password" placeholder="Mot de passe">
-        <button id="loginBtn">Accéder à l'innovation</button>
+        <button id="loginBtn">Accéder à l’innovation</button>
         <div id="error-message" class="error-msg">Identifiants incorrects.</div>
     </div>
 
-    <!-- CONTENU PROTEGE -->
     <div id="protected-content">
-        <div class="header-content">
-            <img src="logo.png" alt="Logo" class="logo" onerror="this.src='https://via.placeholder.com/140x80?text=GreenChemistry'">
-            <h1>Réacteur Plasma Froid</h1>
-            <p>L'avenir du traitement des micropolluants organiques.</p>
-        </div>
-        
-        <!-- VIDÉO -->
-        <div class="video-container">
-            <iframe 
-                src="https://www.youtube.com/embed/rGASK996bVY" 
-                title="Présentation GreenChemistry" 
-                allowfullscreen>
-            </iframe>
-        </div>
-
-        <!-- PRÉSENTATION TECHNIQUE -->
-        <div class="tech-grid">
-            <div class="tech-card">
-                <h3>⚡ Performance (MVP 30 L/h)</h3>
-                <p>Destruction moléculaire par plasma froid (DBD) pour briser les liaisons chimiques des polluants les plus stables (antibiotiques, hormones).</p>
+        <div class="hero-card">
+            <div class="header-content">
+                <img src="logo.png" alt="Logo" class="logo" onerror="this.src='https://via.placeholder.com/140x80?text=GreenChemistry'">
+                <h1>Le Réacteur Plasma Froid</h1>
+                <p>L’avenir du traitement des micropolluants organiques grâce à une technologie innovante, compacte et performante.</p>
             </div>
-            <div class="tech-card">
-                <h3>♻️ Zéro Déchet</h3>
-                <p>Minéralisation totale sans chimie ni boues résiduelles. Suppression radicale des coûts de gestion des déchets toxiques.</p>
-            </div><br>
-            <div class="tech-card">
-                <h3>🔋 Efficacité Énergétique</h3>
-                <p>Générateur haute tension impulsionnel breveté, conçu pour une consommation électrique optimisée et durable.</p>
-            </div>
-            <div class="tech-card">
-                <h3>🔌 Intégration Plug & Play</h3>
-                <p>Châssis compact en inox 316L. Installation directe in situ sur vos lignes de production existantes.</p>
-            </div>
-        </div>
 
-        <div class="highlight-box">
-            "Traitez la pollution à la source, avant dilution, pour une conformité totale et un impact environnemental nul."
-        </div>
+            <div class="video-wrapper">
+                <div class="video-container">
+                    <iframe
+                        src="https://www.youtube.com/embed/rGASK996bVY"
+                        title="Présentation GreenChemistry"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
 
-        <button class="logout-btn" id="logoutBtn">Déconnexion de la session sécurisée</button>
+            <div class="tech-grid">
+                <div class="tech-card">
+                    <h3>⚡ Performance (MVP 30 L/h)</h3>
+                    <p>Destruction moléculaire par plasma froid (DBD) pour briser les liaisons chimiques des polluants les plus stables, notamment les antibiotiques et les hormones.</p>
+                </div>
+
+                <div class="tech-card">
+                    <h3>♻️ Zéro Déchet</h3>
+                    <p>Minéralisation totale sans chimie ni boues résiduelles, avec une réduction forte des coûts liés à la gestion des déchets toxiques.</p>
+                </div>
+
+                <div class="tech-card">
+                    <h3>🔋 Efficacité Énergétique</h3>
+                    <p>Générateur haute tension impulsionnel breveté, pensé pour offrir une consommation électrique optimisée, stable et durable.</p>
+                </div>
+
+                <div class="tech-card">
+                    <h3>🔌 Intégration Plug &amp; Play</h3>
+                    <p>Châssis compact en inox, conçu pour une installation directe sur les lignes de production existantes, avec une mise en œuvre rapide.</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                Traitez la pollution à la source, avant dilution, pour une conformité totale et un impact environnemental minimal.
+            </div>
+
+            <button class="logout-btn" id="logoutBtn">Déconnexion</button>
+        </div>
     </div>
 
     <script>
-        // CONFIGURATION SUPABASE
         const SUPABASE_URL = 'https://xjugxqntydvxqkdbqtkr.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_RNZffI5jbh46TS6Ztb4WQQ_HqIgUI42';
-        
+
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         const loginSection = document.getElementById('login-section');
@@ -197,23 +346,24 @@
             if (session) {
                 loginSection.style.display = 'none';
                 protectedContent.style.display = 'block';
-                document.body.style.justifyContent = "flex-start";
+                document.body.style.justifyContent = 'flex-start';
             } else {
                 loginSection.style.display = 'block';
                 protectedContent.style.display = 'none';
-                document.body.style.justifyContent = "center";
+                document.body.style.justifyContent = 'center';
             }
         }
 
         loginBtn.addEventListener('click', async () => {
-            const email = document.getElementById('email').value;
+            const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
             const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
 
             if (error) {
-                errorMsg.innerText = "Erreur : " + error.message;
+                errorMsg.innerText = 'Erreur : ' + error.message;
                 errorMsg.style.display = 'block';
             } else {
+                errorMsg.style.display = 'none';
                 updateUI(data.session);
             }
         });
