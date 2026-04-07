@@ -1,61 +1,93 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>GreenChemistry - Coming Soon</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: "Helvetica Neue", Arial, sans-serif;
-      background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
-      color: #2e7d32;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      text-align: center;
-    }
-
-    img {
-      max-width: 160px;
-      margin-bottom: 20px;
-    }
-
-    h1 {
-      font-size: 2.5rem;
-      margin: 0 0 10px;
-    }
-
-    p {
-      font-size: 1.2rem;
-      margin: 0;
-    }
-
-    .loader {
-      margin-top: 30px;
-      border: 6px solid #c8e6c9;
-      border-top: 6px solid #2e7d32;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      animation: spin 1.5s linear infinite;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreenChemistry - Login Sécurisé</title>
+    <!-- On charge la bibliothèque Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        /* Gardez le même style que précédemment */
+        :root { --primary-color: #2e7d32; --secondary-color: #c8e6c9; --bg-gradient: linear-gradient(135deg, #e8f5e9, #c8e6c9); }
+        body { margin: 0; font-family: sans-serif; background: var(--bg-gradient); display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .container { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
+        input { width: 90%; padding: 12px; margin: 10px 0; border: 2px solid #eee; border-radius: 8px; }
+        button { width: 100%; padding: 12px; background: var(--primary-color); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .error { color: red; font-size: 0.9rem; margin-top: 10px; display: none; }
+        #protected-content { display: none; }
+    </style>
 </head>
 <body>
-  <!-- Replace file name with your logo file -->
-  <img src="logo.png" alt="GreenChemistry Logo">
-  
-  <h1>We are GreenChemistry</h1>
-  <p>Something sustainable and exciting is coming soon. 🌱</p>
-  
-  <div class="loader"></div>
+
+    <div class="container">
+        <!-- SECTION LOGIN -->
+        <div id="login-section">
+            <h1>GreenChemistry</h1>
+            <p>Connexion sécurisée</p>
+            <input type="email" id="email" placeholder="Email (ex: test@mail.com)">
+            <input type="password" id="password" placeholder="Mot de passe">
+            <button id="loginBtn">Se connecter</button>
+            <p id="error-message" class="error">Erreur de connexion</p>
+        </div>
+
+        <!-- SECTION PROTÉGÉE -->
+        <div id="protected-content">
+            <h1>Bienvenue 🌱</h1>
+            <p>Contenu hautement confidentiel de GreenChemistry.</p>
+            <button id="logoutBtn" style="background:#666">Déconnexion</button>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://xjugxqntydvxqkdbqtkr.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_RNZffI5jbh46TS6Ztb4WQQ_HqIgUI42';
+        
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // 2. ÉLÉMENTS DU DOM
+        const loginBtn = document.getElementById('loginBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const emailInput = document.getElementById('email');
+        const passInput = document.getElementById('password');
+        const loginSection = document.getElementById('login-section');
+        const protectedContent = document.getElementById('protected-content');
+        const errorMsg = document.getElementById('error-message');
+
+        // 3. FONCTION DE CONNEXION
+        loginBtn.addEventListener('click', async () => {
+            const email = emailInput.value;
+            const password = passInput.value;
+
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: email,
+                password: password,
+            });
+
+            if (error) {
+                errorMsg.innerText = error.message;
+                errorMsg.style.display = 'block';
+            } else {
+                showProtected();
+            }
+        });
+
+        // 4. GÉRER L'AFFICHAGE
+        function showProtected() {
+            loginSection.style.display = 'none';
+            protectedContent.style.display = 'block';
+        }
+
+        // 5. DÉCONNEXION
+        logoutBtn.addEventListener('click', async () => {
+            await supabase.auth.signOut();
+            location.reload();
+        });
+
+        // 6. VÉRIFIER SI L'UTILISATEUR EST DÉJÀ CONNECTÉ AU CHARGEMENT
+        window.onload = async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) showProtected();
+        }
+    </script>
 </body>
 </html>
