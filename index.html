@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GreenChemistry - Accès Sécurisé</title>
+    <title>GreenChemistry - Vidéo Exclusive</title>
     
     <!-- SDK Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -25,7 +25,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             text-align: center;
         }
 
@@ -39,71 +39,53 @@
         }
 
         /* --- STYLES LOGIN --- */
-        input {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border: 2px solid var(--secondary-color);
-            border-radius: 8px;
-            box-sizing: border-box;
-        }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 2px solid var(--secondary-color); border-radius: 8px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: var(--primary-color); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .error-msg { color: #d32f2f; font-size: 0.8rem; margin-top: 10px; display: none; }
 
-        button {
-            width: 100%;
-            padding: 12px;
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        .error-msg {
-            color: #d32f2f;
-            font-size: 0.8rem;
-            margin-top: 10px;
-            display: none;
-        }
-
-        /* --- STYLES CONTENU PROTEGE (VOTRE DESIGN) --- */
+        /* --- STYLES CONTENU PROTEGE --- */
         #protected-content {
-            display: none; /* Caché par défaut */
+            display: none;
+            width: 90%;
+            max-width: 800px; /* Plus large pour la vidéo */
+            padding: 20px;
         }
 
-        img.logo {
-            max-width: 160px;
-            margin-bottom: 20px;
+        img.logo { max-width: 140px; margin-bottom: 20px; }
+        h1 { font-size: 2.2rem; margin: 0 0 10px; }
+        
+        /* Conteneur Vidéo Responsive (Ratio 16:9) */
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* Ratio 16:9 */
+            height: 0;
+            margin: 30px 0;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
         }
 
-        h1 { font-size: 2.5rem; margin: 0 0 10px; }
-        p { font-size: 1.2rem; margin: 0; }
+        .video-container iframe {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            border: none;
+        }
 
         .loader {
-            margin: 30px auto;
-            border: 6px solid #c8e6c9;
-            border-top: 6px solid #2e7d32;
+            margin: 20px auto;
+            border: 5px solid #c8e6c9;
+            border-top: 5px solid #2e7d32;
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             animation: spin 1.5s linear infinite;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        .logout-btn {
-            background: none;
-            color: #2e7d32;
-            text-decoration: underline;
-            font-size: 0.8rem;
-            cursor: pointer;
-            border: none;
-            margin-top: 40px;
-        }
+        .logout-btn { background: none; color: #2e7d32; text-decoration: underline; font-size: 0.8rem; cursor: pointer; border: none; margin-top: 20px; }
     </style>
 </head>
 <body>
@@ -112,78 +94,78 @@
     <div id="login-section" class="card">
         <span style="font-size: 40px;">🌱</span>
         <h2>GreenChemistry</h2>
-        <p style="font-size: 0.9rem; margin-bottom: 20px;">Veuillez vous identifier</p>
-        
+        <p style="font-size: 0.9rem; margin-bottom: 20px;">Espace Membre Sécurisé</p>
         <input type="email" id="email" placeholder="Email">
         <input type="password" id="password" placeholder="Mot de passe">
         <button id="loginBtn">Se connecter</button>
         <div id="error-message" class="error-msg">Identifiants incorrects.</div>
     </div>
 
-    <!-- CONTENU PROTEGE (VOTRE PAGE COMING SOON) -->
+    <!-- CONTENU PROTEGE -->
     <div id="protected-content">
-        <!-- Remplacez logo.png par votre vrai fichier sur GitHub -->
-        <img src="logo.png" alt="GreenChemistry Logo" class="logo" onerror="this.src='https://via.placeholder.com/160x100?text=GreenChemistry'">
+        <img src="logo.png" alt="Logo" class="logo" onerror="this.src='https://via.placeholder.com/140x80?text=GreenChemistry'">
         
-        <h1>We are GreenChemistry</h1>
-        <p>Something sustainable and exciting is coming soon. 🌱</p>
+        <h1>Bienvenue dans l'espace membre</h1>
+        <p>Découvrez notre dernière présentation vidéo ci-dessous. 🌱</p>
         
+        <!-- BLOC VIDÉO YOUTUBE -->
+        <div class="video-container">
+            <!-- REMPLACEZ l'ID 'VIDEO_ID' par le code de votre vidéo YouTube -->
+            <iframe 
+                src="https://www.youtube.com/watch?v=rGASK996bVY" 
+                title="GreenChemistry Video" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+            </iframe>
+        </div>
+
         <div class="loader"></div>
+        <p style="font-size: 0.9rem;">Traitement des données en cours...</p>
 
         <button class="logout-btn" id="logoutBtn">Déconnexion</button>
     </div>
 
     <script>
-        // 1. REMPLACEZ PAR VOS CLES SUPABASE
+        // CONFIGURATION SUPABASE
         const SUPABASE_URL = 'https://xjugxqntydvxqkdbqtkr.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_RNZffI5jbh46TS6Ztb4WQQ_HqIgUI42';
         
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // Éléments
         const loginSection = document.getElementById('login-section');
         const protectedContent = document.getElementById('protected-content');
         const loginBtn = document.getElementById('loginBtn');
         const logoutBtn = document.getElementById('logoutBtn');
         const errorMsg = document.getElementById('error-message');
 
-        // FONCTION : Afficher le contenu selon l'état de connexion
         function updateUI(session) {
             if (session) {
                 loginSection.style.display = 'none';
                 protectedContent.style.display = 'block';
-                document.body.style.background = "linear-gradient(135deg, #e8f5e9, #c8e6c9)";
             } else {
                 loginSection.style.display = 'block';
                 protectedContent.style.display = 'none';
             }
         }
 
-        // Action de connexion
         loginBtn.addEventListener('click', async () => {
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-
-            const { data, error } = await supabaseClient.auth.signInWithPassword({
-                email: email,
-                password: password,
-            });
+            const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
 
             if (error) {
-                errorMsg.innerText = "Erreur : " + error.message;
+                errorMsg.innerText = error.message;
                 errorMsg.style.display = 'block';
             } else {
                 updateUI(data.session);
             }
         });
 
-        // Action de déconnexion
         logoutBtn.addEventListener('click', async () => {
             await supabaseClient.auth.signOut();
-            window.location.reload();
+            location.reload();
         });
 
-        // Vérifier la session au démarrage
         window.onload = async () => {
             const { data: { session } } = await supabaseClient.auth.getSession();
             updateUI(session);
